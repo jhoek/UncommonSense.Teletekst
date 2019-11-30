@@ -1,0 +1,6 @@
+function Get-TeletekstForeignNews
+{
+    param
+    (        
+    )
+}
