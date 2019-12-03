@@ -8,16 +8,24 @@ function NormalizeTitle([string]$Text)
 
 function NormalizeText([string]$Text)
 {
-    $Text = $Text -replace ',(\S)', ', $1'
+    # Comma followed by non-whitepace, e.g. 'foo,baz'
+    $Text = $Text -replace ',([\S])', ', $1'
+
+    # Comma preceded by digit, followed by space and digit, e.g. '2, 2 liters'
+    $Text = $Text -replace '(\d),\s(\d)', '$1,$2'
+
+    # Colon followed by non-whitespace, e.g. 'foo:baz'
     $Text = $Text -replace ':(\S)', ': $1'
+
+    # Full stop followed by word character, e.g. 'foo.baz'
     $Text = $Text -replace '\.(\w)', '. $1'
 
     $Text
 }
 
-function GetNewsContent([ValidatePattern('\d{3}')][string]$PageNo)
+function GetNewsContent([string]$PageUrl)
 {
-    Invoke-RestMethod -Uri "http://teletekst-data.nos.nl/json/$PageNo" `
+    Invoke-RestMethod -Uri $PageUrl `
     | Select-Object -ExpandProperty Content `
     | ForEach-Object { ($_ -split "`n").Trim() } `
     | Where-Object { $_ } `
@@ -35,6 +43,7 @@ function Get-TeletekstNews
 {
     param
     (
+        [Parameter(Mandatory)]
         [ValidateSet('Domestic', 'Foreign')]
         [string[]]$Type
     )
@@ -59,12 +68,15 @@ function Get-TeletekstNews
             if ($Title.Success -and $PageNo.Success)
             {
                 $PageNo = $PageNo.Groups[1].Value.Trim() 
+                $PageUrl = "http://teletekst-data.nos.nl/json/$PageNo"
 
                 [PSCustomObject]@{ 
                     Type       = $CurrentType
+                    DateTime   = Get-Date
                     Title      = NormalizeTitle($Title.Groups[1].Value.Trim())
                     Page       = $PageNo
-                    Content    = NormalizeText((GetNewsContent($PageNo)) -join ' ')
+                    Link       = $PageUrl
+                    Content    = NormalizeText((GetNewsContent($PageUrl)) -join ' ')
                     PSTypeName = 'UncommonSense.Teletekst.NewsStory'                
                 } 
             }    
@@ -72,6 +84,4 @@ function Get-TeletekstNews
 }
 }
 
-Get-TeletekstNews -Type Domestic `
-| Select-Object -First 1 `
-| Select-Object -ExpandProperty Content
+Get-TeletekstNews -Type Domestic 
