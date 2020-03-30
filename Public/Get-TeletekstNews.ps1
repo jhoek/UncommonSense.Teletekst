@@ -20,6 +20,9 @@ function NormalizeText([string]$Text)
     # Full stop followed by word character, e.g. 'foo.baz'
     $Text = $Text -replace '\.(\w)', '. $1'
 
+    # Times
+    $Text = $Text -replace '(\d{0,2})\.\s+(\d{2})\suur', '$1.$2 uur'
+
     $Text
 }
 
@@ -61,26 +64,24 @@ function Get-TeletekstNews
         | Select-Object -ExpandProperty content `
         | ForEach-Object { ($_ -split "`n").Trim() } `
         | Where-Object { $_ } `
-        | ForEach-Object { 
-            $Title = [regex]::Match($_, '^<span class="yellow ">(.*?)<')
-            $PageNo = [regex]::Match($_, '(\d{3})</a></span>$')
+        | ForEach-Object { $_ -replace '<a [^>]*?>', '' -replace '</a>', '' } `
+        | ForEach-Object { $_ | pup 'span.yellow text{}' } `
+        | Select-String -Pattern '^(?<Title>.*)\.*\s(?<PageNo>\d{3})$' `
+        | Select-Object -ExpandProperty Matches `
+        | ForEach-Object {
+            $PageNo = $_.Groups[2].Value.Trim() 
+            $PageUrl = "http://teletekst-data.nos.nl/json/$PageNo"
 
-            if ($Title.Success -and $PageNo.Success)
-            {
-                $PageNo = $PageNo.Groups[1].Value.Trim() 
-                $PageUrl = "http://teletekst-data.nos.nl/json/$PageNo"
-
-                [PSCustomObject]@{ 
-                    Type       = $CurrentType
-                    DateTime   = Get-Date
-                    Title      = NormalizeTitle($Title.Groups[1].Value.Trim())
-                    Page       = $PageNo
-                    Link       = $PageUrl
-                    Content    = NormalizeText((GetNewsContent($PageUrl)) -join ' ')
-                    PSTypeName = 'UncommonSense.Teletekst.NewsStory'                
-                } 
-            }    
-        }
+            [PSCustomObject]@{ 
+                Type       = $CurrentType
+                DateTime   = Get-Date
+                Title      = NormalizeTitle($_.Groups[1].Value.Trim())
+                Page       = $PageNo
+                Link       = $PageUrl
+                Content    = NormalizeText((GetNewsContent($PageUrl)) -join ' ')
+                PSTypeName = 'UncommonSense.Teletekst.NewsStory'                
+            } 
+        }    
 }
 }
 
