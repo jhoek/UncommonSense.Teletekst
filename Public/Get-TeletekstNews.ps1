@@ -14,11 +14,11 @@ function NormalizeText([string]$Text)
     # Comma preceded by digit, followed by space and digit, e.g. '2, 2 liters'
     $Text = $Text -replace '(\d),\s(\d)', '$1,$2'
 
-    # Colon followed by non-whitespace, e.g. 'foo:baz'
-    $Text = $Text -replace ':(\S)', ': $1'
+    # (Semi)colon followed by non-whitespace, e.g. 'foo:baz'
+    $Text = $Text -replace '([:;])(\S)', '$1 $2'
 
-    # Full stop followed by word character, e.g. 'foo.baz'
-    $Text = $Text -replace '\.(\w)', '. $1'
+    # Full stop followed by a letter, e.g. 'foo.baz'
+    $Text = $Text -replace '\.([a-zA-Z])', '. $1'
 
     # Times
     $Text = $Text -replace '(\d{0,2})\.\s+(\d{2})\suur', '$1.$2 uur'
@@ -32,6 +32,7 @@ function GetNewsContent([string]$PageUrl)
     | Select-Object -ExpandProperty Content `
     | ForEach-Object { ($_ -split "`n").Trim() } `
     | Where-Object { $_ } `
+    | ForEach-Object { $_ -replace '<a [^>]*?>', '' -replace '</a>', '' } `
     | ForEach-Object {
         $Line = [regex]::Match($_, '<span class="cyan ">(.*?)<')
 
@@ -65,19 +66,20 @@ function Get-TeletekstNews
         | ForEach-Object { ($_ -split "`n").Trim() } `
         | Where-Object { $_ } `
         | ForEach-Object { $_ -replace '<a [^>]*?>', '' -replace '</a>', '' } `
-        | ForEach-Object { $_ | pup 'span.yellow text{}' } `
+        | ForEach-Object { $_ | pup 'span.yellow text{}' --plain } `
         | Select-String -Pattern '^(?<Title>.*)\.*\s(?<PageNo>\d{3})$' `
         | Select-Object -ExpandProperty Matches `
         | ForEach-Object {
             $PageNo = $_.Groups[2].Value.Trim() 
             $PageUrl = "http://teletekst-data.nos.nl/json/$PageNo"
+            
 
             [PSCustomObject]@{ 
                 Type       = $CurrentType
                 DateTime   = Get-Date
                 Title      = NormalizeTitle($_.Groups[1].Value.Trim())
                 Page       = $PageNo
-                Link       = $PageUrl
+                Link       = "https://nos.nl/teletekst#$($PageNo)"
                 Content    = NormalizeText((GetNewsContent($PageUrl)) -join ' ')
                 PSTypeName = 'UncommonSense.Teletekst.NewsStory'                
             } 
@@ -85,4 +87,4 @@ function Get-TeletekstNews
 }
 }
 
-Get-TeletekstNews -Type Domestic 
+Get-TeletekstNews -Type Foreign 
