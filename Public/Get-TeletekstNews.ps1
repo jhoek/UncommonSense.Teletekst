@@ -33,7 +33,7 @@ function GetNewsContent([string]$PageUrl)
     | ForEach-Object { ($_ -split "`n").Trim() } `
     | Where-Object { $_ } `
     | ForEach-Object { $_ -replace '<a [^>]*?>', '' -replace '</a>', '' } `
-    | Select-Object -SkipLast 1 ` # sport
+    | Select-Object -SkipLast 1 `
     | ForEach-Object { ($_ | pup 'span.cyan text{}' --plain) } `
     | ForEach-Object { $_.Trim() }
 }
