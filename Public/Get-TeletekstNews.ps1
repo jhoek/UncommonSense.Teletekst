@@ -33,14 +33,9 @@ function GetNewsContent([string]$PageUrl)
     | ForEach-Object { ($_ -split "`n").Trim() } `
     | Where-Object { $_ } `
     | ForEach-Object { $_ -replace '<a [^>]*?>', '' -replace '</a>', '' } `
-    | ForEach-Object {
-        $Line = [regex]::Match($_, '<span class="cyan ">(.*?)<')
-
-        if ($Line.Success)
-        {
-            $Line.Groups[1].Value.Trim()
-        }
-    }
+    | Select-Object -SkipLast 1 ` # sport
+    | ForEach-Object { ($_ | pup 'span.cyan text{}' --plain) } `
+    | ForEach-Object { $_.Trim() }
 }
 
 function Get-TeletekstNews 
@@ -86,5 +81,3 @@ function Get-TeletekstNews
         }    
 }
 }
-
-Get-TeletekstNews -Type Foreign 
