@@ -12,7 +12,7 @@
     RootModule        = 'UncommonSense.Teletekst.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.0.1'
+    ModuleVersion     = '0.0.2'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -30,7 +30,7 @@
     Copyright         = '(c) 2019 Jan Hoek. All rights reserved.'
 
     # Description of the functionality provided by this module
-    # Description = ''
+    Description       = 'PowerShell module to retrieve domestic and foreign news from the npo.nl teletext service. Note: depends on the *pup* html parser (https://github.com/EricChiang/pup).'
 
     # Minimum version of the PowerShell engine required by this module
     # PowerShellVersion = ''
