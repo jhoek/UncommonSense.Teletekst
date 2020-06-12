@@ -38,7 +38,7 @@ function GetNewsContent([string]$PageUrl)
     | ForEach-Object { $_.Trim() }
 }
 
-function Get-TeletekstNews 
+function Get-TeletekstNews
 {
     param
     (
@@ -61,23 +61,24 @@ function Get-TeletekstNews
         | ForEach-Object { ($_ -split "`n").Trim() } `
         | Where-Object { $_ } `
         | ForEach-Object { $_ -replace '<a [^>]*?>', '' -replace '</a>', '' } `
+        | ForEach-Object { $_ -replace '</span><span class="yellow\s*">', '' } `
         | ForEach-Object { $_ | pup 'span.yellow text{}' --plain } `
         | Select-String -Pattern '^(?<Title>.*)\.*\s(?<PageNo>\d{3})$' `
         | Select-Object -ExpandProperty Matches `
         | ForEach-Object {
-            $PageNo = $_.Groups[2].Value.Trim() 
+            $PageNo = $_.Groups[2].Value.Trim()
             $PageUrl = "http://teletekst-data.nos.nl/json/$PageNo"
-            
 
-            [PSCustomObject]@{ 
+
+            [PSCustomObject]@{
                 Type       = $CurrentType
                 DateTime   = Get-Date
                 Title      = NormalizeTitle($_.Groups[1].Value.Trim())
                 Page       = $PageNo
                 Link       = "https://nos.nl/teletekst#$($PageNo)"
                 Content    = NormalizeText((GetNewsContent($PageUrl)) -join ' ')
-                PSTypeName = 'UncommonSense.Teletekst.NewsStory'                
-            } 
-        }    
+                PSTypeName = 'UncommonSense.Teletekst.NewsStory'
+            }
+        }
 }
 }
