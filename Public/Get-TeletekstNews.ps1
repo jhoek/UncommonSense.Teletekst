@@ -1,6 +1,6 @@
 function NormalizeTitle([string]$Text)
 {
-    $Text = $Text -replace '\.*\s*$', ''
+    $Text = $Text -replace '^\s*', ''
     $Text = NormalizeText($Text)
 
     $Text
@@ -20,16 +20,23 @@ function NormalizeText([string]$Text)
     # Full stop followed by a letter, e.g. 'foo.baz'
     $Text = $Text -replace '\.([a-zA-Z])', '. $1'
 
+    # Hyphen in compound words, e.g. 'Schengen-landen'
+    $Text = $Text -replace '-\s', '-'
+
     # Times
     $Text = $Text -replace '(\d{0,2})\.\s+(\d{2})\suur', '$1.$2 uur'
 
     $Text
 }
 
-function GetNewsContent([string]$PageUrl)
+function GetTitle([string]$Content)
 {
-    Invoke-RestMethod -Uri $PageUrl `
-    | Select-Object -ExpandProperty Content `
+    $Content | pup '.doubleHeight text{}'
+}
+
+function GetNewsContent([string]$Content)
+{
+    $Content `
     | ForEach-Object { ($_ -split "`n").Trim() } `
     | Where-Object { $_ } `
     | ForEach-Object { $_ -replace '<a [^>]*?>', '' -replace '</a>', '' } `
@@ -50,35 +57,29 @@ function Get-TeletekstNews
     $Type.ForEach{
         $CurrentType = $_
 
-        $IndexPageNo = switch ($CurrentType)
+        $PageRange = switch ($CurrentType)
         {
-            'Domestic' { 102 }
-            'Foreign' { 103 }
+            'Domestic' { 104..124 }
+            'Foreign' { 125..137 }
         }
 
-        Invoke-RestMethod -Uri "http://teletekst-data.nos.nl/json/$IndexPageNo" `
-        | Select-Object -ExpandProperty content `
-        | ForEach-Object { ($_ -split "`n").Trim() } `
-        | Where-Object { $_ } `
-        | ForEach-Object { $_ -replace '<a [^>]*?>', '' -replace '</a>', '' } `
-        | ForEach-Object { $_ -replace '</span><span class="yellow\s*">', '' } `
-        | ForEach-Object { $_ | pup 'span.yellow text{}' --plain } `
-        | Select-String -Pattern '^(?<Title>.*)\.*\s(?<PageNo>\d{3})$' `
-        | Select-Object -ExpandProperty Matches `
-        | ForEach-Object {
-            $PageNo = $_.Groups[2].Value.Trim()
-            $PageUrl = "http://teletekst-data.nos.nl/json/$PageNo"
+        $CurrentPage = $PageRange[0]
 
+        while ($CurrentPage -in $PageRange)
+        {
+            $PageData = Invoke-RestMethod -Uri "http://teletekst-data.nos.nl/json/$CurrentPage"
 
             [PSCustomObject]@{
                 Type       = $CurrentType
+                Page       = $CurrentPage
                 DateTime   = Get-Date
-                Title      = NormalizeTitle($_.Groups[1].Value.Trim())
-                Page       = $PageNo
-                Link       = "https://nos.nl/teletekst#$($PageNo)"
-                Content    = NormalizeText((GetNewsContent($PageUrl)) -join ' ')
+                Title      = NormalizeTitle(GetTitle($PageData.Content))
+                Link       = "https://nos.nl/teletekst#$($CurrentPage)"
+                Content    = NormalizeText(GetNewsContent($PageData.Content) -join ' ')
                 PSTypeName = 'UncommonSense.Teletekst.NewsStory'
             }
+
+            $CurrentPage = $PageData.NextPage
         }
-}
+    }
 }
