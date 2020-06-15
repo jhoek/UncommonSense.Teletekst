@@ -31,7 +31,7 @@ function NormalizeText([string]$Text)
 
 function GetTitle([string]$Content)
 {
-    $Content | pup '.doubleHeight text{}'
+    $Content | pup '.doubleHeight text{}' --plain
 }
 
 function GetNewsContent([string]$Content)
