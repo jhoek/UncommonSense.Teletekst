@@ -73,7 +73,7 @@ function Get-TeletekstNews
 
         while ($CurrentPage -in $PageRange)
         {
-            $PageData = Invoke-RestMethod -Uri "http://teletekst-data.nos.nl/json/$CurrentPage"
+            $PageData = Invoke-RestMethod -Uri "https://teletekst-data.nos.nl/json/$CurrentPage"
 
             [PSCustomObject]@{
                 Type       = $CurrentType
