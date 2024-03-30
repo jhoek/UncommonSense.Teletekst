@@ -4,7 +4,7 @@ function NormalizeTitle([string]$Text)
     $Text = $Text -replace '^\s*', ''
 
     # Remove trailing whitespace
-    $Text = $Text -replace '\s*$',''
+    $Text = $Text -replace '\s*$', ''
 
     # Normalize remaining text
     $Text = NormalizeText($Text)
@@ -37,7 +37,7 @@ function NormalizeText([string]$Text)
 
 function GetTitle([string]$Content)
 {
-    $Content | pup '.doubleHeight text{}' --plain
+    $Content | pup '.bg-blue text{}' --plain
 }
 
 function GetNewsContent([string]$Content)
@@ -55,9 +55,10 @@ function Get-TeletekstNews
 {
     param
     (
-        [Parameter(Mandatory)]
+        [Parameter()]
         [ValidateSet('Domestic', 'Foreign')]
-        [string[]]$Type
+        [ValidateCount(1, [int]::MaxValue)]
+        [string[]]$Type = @('Domestic', 'Foreign')
     )
 
     $Type.ForEach{
