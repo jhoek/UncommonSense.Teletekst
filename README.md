@@ -102,4 +102,4 @@ Get-TeletekstNews [[-Type] <string[]>] [<CommonParameters>]
     Aliases                      None
     Dynamic?                     false
     Accept wildcard characters?  false
-<div style='font-size:small; color: #ccc'>Generated 30-03-2024 10:42</div>
+<div style='font-size:small; color: #ccc'>Generated 30-03-2024 10:51</div>
