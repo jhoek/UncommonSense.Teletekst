@@ -30,7 +30,7 @@
     Copyright         = '(c) 2019 Jan Hoek. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'PowerShell module to retrieve domestic and foreign news from the npo.nl teletext service. Note: depends on the *pup* html parser (https://github.com/EricChiang/pup).'
+    Description       = 'PowerShell module for retrieving NOS (Dutch) Teletekst news. Note: depends on the *pup* html parser (https://github.com/EricChiang/pup).'
 
     # Minimum version of the PowerShell engine required by this module
     # PowerShellVersion = ''
@@ -95,13 +95,13 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            # Tags = @()
+            Tags       = @('dutch', 'teletext', 'news', 'nos')
 
             # A URL to the license for this module.
-            # LicenseUri = ''
+            LicenseUri = 'https://github.com/jhoek/UncommonSense.Teletekst?tab=MIT-1-ov-file#readme'
 
             # A URL to the main website for this project.
-            # ProjectUri = ''
+            ProjectUri = 'https://github.com/jhoek/UncommonSense.Teletekst'
 
             # A URL to an icon representing this module.
             # IconUri = ''
