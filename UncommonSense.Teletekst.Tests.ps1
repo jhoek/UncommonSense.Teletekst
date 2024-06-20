@@ -1,3 +1,7 @@
+BeforeAll {
+    Import-Module "$PSScriptRoot/UncommonSense.Teletekst.psd1"
+}
+
 Describe 'UncommonSense.Teletekst' {
     It 'Returns <Type> news' {
         $Result = Get-TeletekstNews -Type $Type
