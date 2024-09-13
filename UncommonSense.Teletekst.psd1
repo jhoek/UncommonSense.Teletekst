@@ -30,7 +30,7 @@
     Copyright         = '(c) 2019 Jan Hoek. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'PowerShell module for retrieving NOS (Dutch) Teletekst news. Note: depends on the *pup* html parser (https://github.com/EricChiang/pup).'
+    Description       = 'PowerShell module for retrieving NOS (Dutch) Teletekst news.'
 
     # Minimum version of the PowerShell engine required by this module
     # PowerShellVersion = ''
@@ -51,7 +51,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    # RequiredModules = @()
+    RequiredModules   = @('UncommonSense.Hap')
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
