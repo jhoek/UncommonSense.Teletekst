@@ -1,5 +1,5 @@
 BeforeAll {
-    Import-Module "$PSScriptRoot/UncommonSense.Teletekst.psd1"
+    Import-Module "$PSScriptRoot/UncommonSense.Teletekst.psd1" -Force
 }
 
 Describe 'UncommonSense.Teletekst' {
