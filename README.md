@@ -2,6 +2,16 @@
 
 PowerShell module for retrieving NOS (Dutch) Teletekst news.
 
+## Requirements
+- UncommonSense.Hap
+
+## Index
+
+| Command | Synopsis |
+| ------- | -------- |
+| [Get-TeletekstNews](#Get-TeletekstNews) | Get-TeletekstNews [[-Type] <string[]>] [<CommonParameters>] |
+| [Get-TeletekstWeather](#Get-TeletekstWeather) | Get-TeletekstWeather |
+
 <a name="Get-TeletekstNews"></a>
 ## Get-TeletekstNews
 ### Synopsis
@@ -20,4 +30,13 @@ Get-TeletekstNews [[-Type] <string[]>] [<CommonParameters>]
     Aliases                      None
     Dynamic?                     false
     Accept wildcard characters?  false
-<div style='font-size:small; color: #ccc'>Generated 30-03-2024 11:01</div>
+<a name="Get-TeletekstWeather"></a>
+## Get-TeletekstWeather
+### Synopsis
+Get-TeletekstWeather
+### Syntax
+```powershell
+Get-TeletekstWeather
+```
+### Parameters
+<div style='font-size:small; color: #ccc'>Generated 04-01-2025 15:34</div>
