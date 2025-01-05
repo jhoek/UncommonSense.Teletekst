@@ -6,7 +6,8 @@ function Get-TeletekstTrafficJam
 
     $DutchCulture = Get-Culture 'nl-NL'
     $SubPage = 1
-    $PageData = Invoke-RestMethod -Uri "https://teletekst-data.nos.nl/json/730/$SubPage" -SkipHttpErrorCheck -StatusCodeVariable StatusCode
+    $PageData = Invoke-RestMethod -Uri "https://teletekst-data.nos.nl/json/730-$SubPage" -SkipHttpErrorCheck -StatusCodeVariable StatusCode
+    $StatusCode
 
     while($StatusCode -eq '200')
     {
@@ -20,6 +21,7 @@ function Get-TeletekstTrafficJam
         # $Document
 
         $SubPage++
-        $PageData = Invoke-RestMethod -Uri "https://teletekst-data.nos.nl/json/730/$SubPage" -SkipHttpErrorCheck -StatusCodeVariable StatusCode
+        $PageData = Invoke-RestMethod -Uri "https://teletekst-data.nos.nl/json/730-$SubPage" -SkipHttpErrorCheck -StatusCodeVariable StatusCode
+        $StatusCode
     }
 }
