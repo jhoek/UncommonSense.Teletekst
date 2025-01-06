@@ -51,7 +51,7 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules   = @('UncommonSense.Hap')
+    # RequiredModules   = @()
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()
@@ -95,13 +95,13 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags                       = 'dutch', 'teletext', 'news', 'nos'
+            Tags       = 'dutch', 'teletext', 'news', 'nos'
 
             # A URL to the license for this module.
-            LicenseUri                 = 'https://github.com/jhoek/UncommonSense.Teletekst?tab=MIT-1-ov-file#readme'
+            LicenseUri = 'https://github.com/jhoek/UncommonSense.Teletekst?tab=MIT-1-ov-file#readme'
 
             # A URL to the main website for this project.
-            ProjectUri                 = 'https://github.com/jhoek/UncommonSense.Teletekst'
+            ProjectUri = 'https://github.com/jhoek/UncommonSense.Teletekst'
 
             # A URL to an icon representing this module.
             # IconUri = ''
@@ -116,7 +116,7 @@
             # RequireLicenseAcceptance = $false
 
             # External dependent modules of this module
-            ExternalModuleDependencies = @('UncommonSense.Hap')
+            # ExternalModuleDependencies = @()
 
         } # End of PSData hashtable
 

@@ -1,5 +1,1 @@
 https://teletekst-data.nos.nl/json/730-1
-
-# (Invoke-WebRequest https://teletekst-data.nos.nl/json/730 | Select-Object -ExpandProperty Content | ConvertFrom-Json -Depth 10 | Select-Object -ExpandProperty Content) -split "`n" -replace '</span>', '' -replace '<span class=".*?">', '' -replace '</a>', '' -replace '<a.*?>', '' -replace '&#xF02c;', '◼' -replace '&#xF020;', ' '
-
-# [System.Web.HttpUtility]::HtmlDecode('&euml;')
