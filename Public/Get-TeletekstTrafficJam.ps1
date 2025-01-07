@@ -8,8 +8,6 @@ function Get-TeletekstTrafficJam
     $SubPage = 1
     $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/730-$SubPage"
 
-    $PageData = $PageData -split "`n"
-
     while($PageData)
     {
         $pageData[4]

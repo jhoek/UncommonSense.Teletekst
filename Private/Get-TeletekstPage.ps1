@@ -18,4 +18,5 @@ function Get-TeletekstPage
     | ForEach-Object { $_ -replace '</span>', '' }
     | ForEach-Object { $_ -replace '<a.*?>', '' }
     | ForEach-Object { $_ -replace '</a>', '' }
+    | ForEach-Object { $_ -split "`n"}
 }
