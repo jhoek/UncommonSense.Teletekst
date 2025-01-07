@@ -8,19 +8,17 @@ function Get-TeletekstTrafficJam
     $SubPage = 1
     $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/730-$SubPage"
 
-    while($StatusCode -eq '200')
-    {
-        $Content = $PageData | Select-Object -ExpandProperty Content
-        $Document = ConvertTo-HtmlDocument -Text $Content
+    $PageData = $PageData -split "`n"
 
-        $DateTimeText = $Document | Select-HtmlNode -CssSelector '.cyan.bg-blue' -All | Select-Object -Skip 1 -First 1 | Get-HtmlNodeText
-        $DateTimeText = $DateTimeText -replace '\s', '' -replace '^actueel', '' -replace 'uur$', ''
+    while($PageData)
+    {
+        $pageData[4]
+        $DateTimeText = $PageData[4] -replace '\s', '' -replace '^actueel', '' -replace 'uur$', ''
         $DateTime = [DateTime]::ParseExact($DateTimeText, 'ddMMM\.HH\:mm', $DutchCulture)
         "**$($DateTime)**"
         # $Document
 
         $SubPage++
-        $PageData = Invoke-RestMethod -Uri "https://teletekst-data.nos.nl/json/730-$SubPage" -SkipHttpErrorCheck -StatusCodeVariable StatusCode
-        $StatusCode
+        $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/730-$SubPage"
     }
 }
