@@ -6,7 +6,7 @@ function Get-TeletekstPage
         [string]$Uri
     )
 
-    Invoke-WebRequest -Uri $Uri
+    Invoke-WebRequest -Uri $Uri -SkipHttpErrorCheck
     | Select-Object -ExpandProperty Content
     | ConvertFrom-Json -Depth 10
     | Select-Object -ExpandProperty Content
