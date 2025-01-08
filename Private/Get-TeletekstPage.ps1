@@ -9,7 +9,9 @@ function Get-TeletekstPage
         [int]$HeaderLine = 0,
 
         [ValidateRange(0, [int]::MaxValue)]
-        [int]$FooterLine = 0
+        [int]$FooterLine = 0,
+
+        [switch]$SkipBlank
     )
 
     $Response = Invoke-RestMethod -Uri $Uri -SkipHttpErrorCheck -StatusCodeVariable StatusCode
@@ -27,7 +29,15 @@ function Get-TeletekstPage
         | ForEach-Object { $_ -replace '</a>', '' }
         | ForEach-Object { $_ -split "`n"}
 
-        $Payload = $Content | Select-Object -Skip $HeaderLine -SkipLast $FooterLine
+        $Payload =
+            $Content
+            | Select-Object -Skip $HeaderLine -SkipLast $FooterLine
+            | ForEach-Object { $_.TrimEnd() }
+
+        if ($SkipBlank)
+        {
+            $PayLoad = $PayLoad | Where-Object { $_.Trim() }
+        }
 
         [PSCustomObject]@{
             Content = $Content

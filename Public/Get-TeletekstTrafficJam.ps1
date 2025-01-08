@@ -6,17 +6,25 @@ function Get-TeletekstTrafficJam
 
     $DutchCulture = Get-Culture 'nl-NL'
     $SubPage = 1
-    $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/730-$SubPage" -HeaderLine 4 -FooterLine 3
+    $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/730-$SubPage" -HeaderLine 6 -FooterLine 3 -SkipBlank
 
-    while ($PageData)
+    $Content = while ($PageData)
     {
-        $DateTimeText = $PageData.Payload[4] -replace '\s', '' -replace '^actueel', '' -replace 'uur$', ''
+        $DateTimeText = $PageData.Content[4] -replace '\s', '' -replace '^actueel', '' -replace 'uur$', ''
         $DateTime = [DateTime]::ParseExact($DateTimeText, 'ddMMM\.HH\:mm', $DutchCulture)
-        "**$($DateTime)**"
 
         $PageData.Payload
 
         $SubPage++
-        $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/730-$SubPage" -HeaderLine 4 -FooterLine 3
+        $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/730-$SubPage" -HeaderLine 6 -FooterLine 3 -SkipBlank
     }
+
+    [PSCustomObject]@{
+        Page       = 730
+        DateTime   = $DateTime
+        Link       = 'https://nos.nl/teletekst#730'
+        Content    = $Content
+        PSTypeName = 'UncommonSense.Teletekst.Traffic'
+    }
+
 }
