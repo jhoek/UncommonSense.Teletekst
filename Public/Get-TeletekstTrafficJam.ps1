@@ -6,7 +6,7 @@ function Get-TeletekstTrafficJam
 
     $DutchCulture = Get-Culture 'nl-NL'
     $SubPage = 1
-    $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/730-$SubPage"
+    $PageData = Get-TeletekstPageContent -Uri "https://teletekst-data.nos.nl/json/730-$SubPage"
 
     $PageData
 
