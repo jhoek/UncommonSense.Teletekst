@@ -21,17 +21,15 @@ function Get-TeletekstNews
 
         while ($CurrentPage -in $PageRange)
         {
-            $PageData = Invoke-RestMethod -Uri "https://teletekst-data.nos.nl/json/$CurrentPage"
-            $Content = $PageData | Select-Object -ExpandProperty Content
-            $Document = ConvertTo-HtmlDocument -Text $Content
+            $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/$CurrentPage" -HeaderLine 4 -FooterLine 3
 
             [PSCustomObject]@{
                 Type       = $CurrentType
                 Page       = $CurrentPage
                 DateTime   = Get-Date
-                Title      = NormalizeTitle(($Document | Select-HtmlNode -CssSelector '.bg-blue' -All | Get-HtmlNodeText))
+                Title      = $PageData.Content[2].Trim()
                 Link       = "https://nos.nl/teletekst#$($CurrentPage)"
-                Content    = NormalizeText(($Document | Select-HtmlNode -CssSelector 'span.cyan' -All | Select-Object -SkipLast 1 | Get-HtmlNodeText) -join ' ')
+                Content    = NormalizeText($PageData.Payload -join ' ')
                 PSTypeName = 'UncommonSense.Teletekst.NewsStory'
             }
 

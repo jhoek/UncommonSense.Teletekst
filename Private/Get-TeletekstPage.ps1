@@ -32,7 +32,7 @@ function Get-TeletekstPage
         $Payload =
             $Content
             | Select-Object -Skip $HeaderLine -SkipLast $FooterLine
-            | ForEach-Object { $_.TrimEnd() }
+            | ForEach-Object { $_.Trim() }
 
         if ($SkipBlank)
         {
