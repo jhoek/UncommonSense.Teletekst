@@ -8,10 +8,8 @@
             "type": "shell",
             "command": "pwsh",
             "args": [
-                "-Command",
-                "Invoke-Pester",
-                "-Output",
-                "Detailed"
+                "-File",
+                "test.ps1"
             ],
             "group": {
                 "kind": "test",

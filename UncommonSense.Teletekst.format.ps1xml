@@ -4,6 +4,8 @@
             <Name>Default</Name>
             <ViewSelectedBy>
                 <TypeName>UncommonSense.Teletekst.NewsStory</TypeName>
+                <TypeName>UncommonSense.Teletekst.Weather</TypeName>
+                <TypeName>UncommonSense.Teletekst.Traffic</TypeName>
             </ViewSelectedBy>
             <TableControl>
                 <TableHeaders>
