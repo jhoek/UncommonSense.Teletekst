@@ -6,13 +6,11 @@ function Get-TeletekstTrafficJam
 
     $DutchCulture = Get-Culture 'nl-NL'
     $SubPage = 1
-    $PageData = Get-TeletekstPageContent -Uri "https://teletekst-data.nos.nl/json/730-$SubPage"
-
-    $PageData
+    $PageData = Get-TeletekstPage -Uri "https://teletekst-data.nos.nl/json/730-$SubPage"
 
     while ($PageData)
     {
-        $DateTimeText = $PageData[4] -replace '\s', '' -replace '^actueel', '' -replace 'uur$', ''
+        $DateTimeText = $PageData.Content[4] -replace '\s', '' -replace '^actueel', '' -replace 'uur$', ''
         $DateTime = [DateTime]::ParseExact($DateTimeText, 'ddMMM\.HH\:mm', $DutchCulture)
         "**$($DateTime)**"
 
