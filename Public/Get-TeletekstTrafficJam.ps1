@@ -23,7 +23,8 @@ function Get-TeletekstTrafficJam
         Page       = 730
         DateTime   = $DateTime
         Link       = 'https://nos.nl/teletekst#730'
-        Content    = $Content
+        Title      = 'Verkeersinformatie'
+        Content    = NormalizeText($Content -join ' ')
         PSTypeName = 'UncommonSense.Teletekst.Traffic'
     }
 
