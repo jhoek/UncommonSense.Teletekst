@@ -12,7 +12,7 @@ function Get-TeletekstWeather
     $DateTimeText = $DateTimeText -replace '\s', '' -replace '^WEEROVERZICHT', '' -replace 'UUR$', ''
     $DateTimeElements = $DateTimeText -split ':'
     $DateTime = Get-Date -Hour $DateTimeElements[0] -Minute $DateTimeElements[1] -Second 0 -MilliSecond 0
-    if ($DateTime -gt (Get-Date)) { $DateTime = $DateTime.AddDay(-1) } # When current time is after midnight, but latest update was before midnight
+    if ($DateTime -gt (Get-Date)) { $DateTime = $DateTime.AddDays(-1) } # When current time is after midnight, but latest update was before midnight
 
     [PSCustomObject]@{
         Page       = 703
